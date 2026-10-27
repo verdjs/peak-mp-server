@@ -1,0 +1,28 @@
+# PEAK multiplayer server: speaks the Photon protocol the game's built-in client already uses,
+# so no Photon account is involved. One Durable Object per room ("game server"); the short
+# name-server / master-server conversations are handled by the Worker itself.
+name = "peak-mp-server"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "ROOMS"
+class_name = "GameRoom"
+
+# The public lobby list (one instance, in memory).
+[[durable_objects.bindings]]
+name = "LOBBIES"
+class_name = "LobbyList"
+
+# SQLite-backed classes run on the Workers Free plan (no storage is actually used).
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["GameRoom"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["LobbyList"]
+
+[observability]
+enabled = true
